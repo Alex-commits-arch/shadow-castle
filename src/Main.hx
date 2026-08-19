@@ -13,6 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+import haxe.io.Output;
 import cdb.Data;
 import cdb.Sheet;
 
@@ -108,7 +109,8 @@ class Main extends Model {
 			y : 0,
 		};
 		pages = new JqPages(this);
-		load(true);
+		load(false);
+		js.Browser.console.log("helllo");
 		var t = new haxe.Timer(1000);
 		t.run = checkTime;
 	}
@@ -680,6 +682,7 @@ class Main extends Model {
 			var str = Std.string(v).split("\n").join(" ").split("\t").join("");
 			if( str.length > 50 ) str = str.substr(0, 47) + "...";
 			str;
+		case TCurve, TGradient, TGuid, TPolymorph: '';
 		}
 	}
 
@@ -693,7 +696,7 @@ class Main extends Model {
 		var nref = new MenuItem( { label : "Show References" } );
 		for( m in [nup, ndown, nins, ndel, nsep, nref] )
 			n.append(m);
-		var sepIndex = Lambda.indexOf(sheet.separators, index);
+		var sepIndex = Lambda.indexOf(sheet.separators, { index: index });
 		nsep.checked = sepIndex >= 0;
 		nins.click = function() {
 			newLine(sheet, index);
@@ -716,11 +719,11 @@ class Main extends Model {
 			} else {
 				sepIndex = sheet.separators.length;
 				for( i in 0...sheet.separators.length )
-					if( sheet.separators[i] > index ) {
+					if( sheet.separators[i].index > index ) {
 						sepIndex = i;
 						break;
 					}
-				sheet.separators.insert(sepIndex, index);
+				sheet.separators.insert(sepIndex, { index: index });
 				if( sheet.props.separatorTitles != null && sheet.props.separatorTitles.length > sepIndex )
 					sheet.props.separatorTitles.insert(sepIndex, null);
 			}
@@ -1303,6 +1306,8 @@ class Main extends Model {
 			});
 		case TList, TLayer(_), TTilePos, TProperties:
 			throw "assert2";
+		case TCurve, TGradient, TGuid, TPolymorph:
+			// nothing
 		}
 	}
 
@@ -1913,23 +1918,23 @@ class Main extends Model {
 
 		var snext = 0;
 		for( i in 0...lines.length ) {
-			while( sheet.separators[snext] == i ) {
+			while( sheet.separators[snext] != null && sheet.separators[snext].index == i ) {
 				var sep = J("<tr>").addClass("separator").append('<td colspan="${colCount+1}">').appendTo(content);
 				var content = sep.find("td");
 				var title = if( sheet.props.separatorTitles != null ) sheet.props.separatorTitles[snext] else null;
-				if( title != null ) content.text(title);
+				if( title != null ) content.text(title.title);
 				var pos = snext;
 				sep.dblclick(function(e) {
 					content.empty();
-					J("<input>").appendTo(content).focus().val(title == null ? "" : title).blur(function(_) {
+					J("<input>").appendTo(content).focus().val(title == null ? "" : title.title).blur(function(_) {
 						title = JTHIS.val();
 						JTHIS.remove();
-						content.text(title);
+						content.text(title.title);
 						var titles = sheet.props.separatorTitles;
 						if( titles == null ) titles = [];
 						while( titles.length < pos )
 							titles.push(null);
-						titles[pos] = title == "" ? null : title;
+						titles[pos] = title.title == "" ? null : title;
 						while( titles[titles.length - 1] == null && titles.length > 0 )
 							titles.pop();
 						if( titles.length == 0 ) titles = null;
@@ -1938,7 +1943,7 @@ class Main extends Model {
 					}).keypress(function(e) {
 						e.stopPropagation();
 					}).keydown(function(e) {
-						if( e.keyCode == 13 ) { JTHIS.blur(); e.preventDefault(); } else if( e.keyCode == 27 ) content.text(title);
+						if( e.keyCode == 13 ) { JTHIS.blur(); e.preventDefault(); } else if( e.keyCode == 27 ) content.text(title.title);
 						e.stopPropagation();
 					});
 				});

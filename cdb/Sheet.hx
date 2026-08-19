@@ -14,6 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 package cdb;
+import js.Browser;
 import cdb.Data;
 
 typedef SheetIndex = { id : String, disp : String, ico : cdb.Types.TilePos, obj : Dynamic }
@@ -195,6 +196,10 @@ class Sheet {
 		return all;
 	}
 
+	function log( msg ) {
+		Browser.console.log(msg);
+	}
+
 	public function newLine( ?index : Int ) {
 		var o = {
 		};
@@ -331,6 +336,8 @@ class Sheet {
 	}
 
 	public function addColumn( c : Column, ?index : Int ) {
+
+		log('Creating column [${c.name} (${c.type})]');
 		// create
 		for( c2 in sheet.columns )
 			if( c2.name == c.name )

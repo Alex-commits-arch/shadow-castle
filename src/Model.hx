@@ -13,6 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+import js.Browser;
 import cdb.Data;
 
 typedef Prefs = {
@@ -125,6 +126,10 @@ class Model {
 
 	public function compressionEnabled() {
 		return base.compress;
+	}
+
+	function log( msg ) {
+		Browser.console.log(msg);
 	}
 
 	function error( msg ) {

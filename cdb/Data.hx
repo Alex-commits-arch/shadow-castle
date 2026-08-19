@@ -130,6 +130,7 @@ typedef SheetProps = {
 	@:optional var level : LevelsProps;
 	@:optional var dataFiles : String;
 	@:optional var editor : Any;
+	@:optional var separatorTitles : Array<Separator>;
 }
 
 typedef Separator = {
