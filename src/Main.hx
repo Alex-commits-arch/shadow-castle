@@ -1922,19 +1922,19 @@ class Main extends Model {
 				var sep = J("<tr>").addClass("separator").append('<td colspan="${colCount+1}">').appendTo(content);
 				var content = sep.find("td");
 				var title = if( sheet.props.separatorTitles != null ) sheet.props.separatorTitles[snext] else null;
-				if( title != null ) content.text(title.title);
+				if( title != null ) content.text(title);
 				var pos = snext;
 				sep.dblclick(function(e) {
 					content.empty();
-					J("<input>").appendTo(content).focus().val(title == null ? "" : title.title).blur(function(_) {
+					J("<input>").appendTo(content).focus().val(title == null ? "" : title).blur(function(_) {
 						title = JTHIS.val();
 						JTHIS.remove();
-						content.text(title.title);
+						content.text(title);
 						var titles = sheet.props.separatorTitles;
 						if( titles == null ) titles = [];
 						while( titles.length < pos )
 							titles.push(null);
-						titles[pos] = title.title == "" ? null : title;
+						titles[pos] = title == "" ? null : title;
 						while( titles[titles.length - 1] == null && titles.length > 0 )
 							titles.pop();
 						if( titles.length == 0 ) titles = null;
@@ -1943,7 +1943,7 @@ class Main extends Model {
 					}).keypress(function(e) {
 						e.stopPropagation();
 					}).keydown(function(e) {
-						if( e.keyCode == 13 ) { JTHIS.blur(); e.preventDefault(); } else if( e.keyCode == 27 ) content.text(title.title);
+						if( e.keyCode == 13 ) { JTHIS.blur(); e.preventDefault(); } else if( e.keyCode == 27 ) content.text(title);
 						e.stopPropagation();
 					});
 				});
