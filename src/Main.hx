@@ -682,6 +682,8 @@ class Main extends Model {
 			var str = Std.string(v).split("\n").join(" ").split("\t").join("");
 			if( str.length > 50 ) str = str.substr(0, 47) + "...";
 			str;
+		case TTree(sheet):
+			'tree';
 		case TCurve, TGradient, TGuid, TPolymorph: '';
 		}
 	}
@@ -1304,7 +1306,7 @@ class Main extends Model {
 					save();
 				});
 			});
-		case TList, TLayer(_), TTilePos, TProperties:
+		case TList, TLayer(_), TTilePos, TProperties, TTree(_):
 			throw "assert2";
 		case TCurve, TGradient, TGuid, TPolymorph:
 			// nothing
@@ -2287,6 +2289,13 @@ class Main extends Model {
 			TImage;
 		case "list":
 			TList;
+		case "tree":
+			var s = base.sheets[Std.parseInt(v.sheet)];
+			if( s == null ) {
+				error("Sheet not found");
+				return;
+			}
+			TTree(s.name);
 		case "custom":
 			var t = base.getCustomType(v.ctype);
 			if( t == null ) {

@@ -130,6 +130,9 @@ div.modal #col_options.t_ref .sheet {
 div.modal #col_options.t_layer .sheet {
 	display : block;
 }
+div.modal #col_options.t_tree .sheet {
+	display : block;
+}
 div.modal #col_options.t_custom .custom {
 	display : block;
 }

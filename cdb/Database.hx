@@ -359,7 +359,7 @@ class Database {
 					}
 			id;
 		case TBool: c.opt ? true : false;
-		case TList: [];
+		case TList, TTree(_): [];
 		case TProperties:
 			var obj = {};
 			if( sheet != null ) {
@@ -814,7 +814,7 @@ class Database {
 			if( esc )
 				return haxe.Json.stringify(val);
 			return valueToString(val);
-		case TProperties, TList, TPolymorph:
+		case TProperties, TList, TPolymorph, TTree(_):
 			"???";
 		}
 	}

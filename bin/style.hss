@@ -140,6 +140,10 @@ div.modal {
 		display : block;
 	}
 
+	#col_options.t_tree .sheet {
+		display : block;
+	}
+
 	#col_options.t_layer .sheet {
 		display : block;
 	}

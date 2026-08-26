@@ -38,6 +38,7 @@ enum ColumnType {
 	TCurve;
 	TGuid;
 	TPolymorph;
+	TTree( sheet : String );
 }
 
 enum abstract DisplayType(Int) {
