@@ -13,6 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+import haxe.Json;
 import js.Browser;
 import cdb.Data;
 
@@ -140,17 +141,19 @@ class Model {
 		history = [];
 		redo = [];
 		base = new cdb.Database();
+		if (prefs.curFile != null) {
 		try {
-			base.load(sys.io.File.getContent(prefs.curFile));
-			if( prefs.curSheet > base.sheets.length )
+				base.load(sys.io.File.getContent(prefs.curFile));
+				if( prefs.curSheet > base.sheets.length )
+					prefs.curSheet = 0;
+				else while( base.sheets[prefs.curSheet].props.hide )
+					prefs.curSheet--;
+			} catch( e : Dynamic ) {
+				if( !noError ) error(Std.string(e));
+				prefs.curFile = null;
 				prefs.curSheet = 0;
-			else while( base.sheets[prefs.curSheet].props.hide )
-				prefs.curSheet--;
-		} catch( e : Dynamic ) {
-			if( !noError ) error(Std.string(e));
-			prefs.curFile = null;
-			prefs.curSheet = 0;
-			base = new cdb.Database();
+				base = new cdb.Database();
+			}
 		}
 		try {
 			var img = prefs.curFile.split(".");

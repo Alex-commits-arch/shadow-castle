@@ -19,7 +19,7 @@ class Parser {
 
 	public static function saveType( t : Data.ColumnType ) : String {
 		return switch( t ) {
-		case TRef(_), TCustom(_), TLayer(_):
+		case TRef(_), TCustom(_), TLayer(_), TTree(_):
 			Type.enumIndex(t) + ":" + Type.enumParameters(t)[0];
 		case TEnum(values), TFlags(values):
 			Type.enumIndex(t) + ":" + values.join(",");
@@ -52,6 +52,7 @@ class Parser {
 		case 19: TCurve;
 		case 20: TGuid;
 		case 21: TPolymorph;
+		case 22: TTree(str.substr(str.indexOf(":") + 1));
 		default: throw "Unknown type " + str;
 		}
 	}

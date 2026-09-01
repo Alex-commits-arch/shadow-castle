@@ -166,3 +166,14 @@ typedef Data = {
 	customTypes : Array<CustomType>,
 	compress : Bool,
 }
+
+typedef TreeItemType = {
+	var name: String;
+	var columns: Map<String, String>;
+}
+
+typedef TreeItem = {
+	var name: String;
+	@:optional var values: Dynamic;
+	@:optional var children: Array<TreeItem>;
+}

@@ -1,6 +1,7 @@
 package cdb;
 
 import cdb.Data;
+import js.Browser
 
 @:allow(cdb.Macros)
 class ConstLoader {
@@ -67,12 +68,69 @@ class ConstLoader {
 			return load(pval.col, pval.val, polySub.name);
 		case TList:
 			return loadList(col, raw, sheetName);
+		case TTree:
+			return loadTree(col, raw, sheetName);
 		default:
 			return raw;
 		}
 	}
 
 	function loadList( col : Data.Column, raw : Dynamic, sheetName : String ) : Dynamic {
+		Browser.console.log("Loading list");
+		var sub = getSub(sheetName, col);
+		var subCols = [for( c in sub.columns ) if( c.kind != Hidden ) c];
+		var arr : Array<Dynamic> = raw;
+
+		var idCol = null;
+		for( c in subCols ) if( c.type == TId ) { idCol = c; break; }
+
+		if( subCols.length == 2 && idCol != null ) {
+			var valCol = subCols[0] == idCol ? subCols[1] : subCols[0];
+			var obj : Dynamic = {};
+			var keys : Array<String> = [];
+			for( row in arr ) {
+				var sid : String = Reflect.field(row, idCol.name);
+				if( sid == null || sid == "" ) continue;
+				var v = load(valCol, Reflect.field(row, valCol.name), sub.name);
+				Reflect.setField(obj, sid, v);
+				keys.push(sid);
+			}
+			// iterator over values by key order
+			var idName = idCol.name;
+			var valName = valCol.name;
+			Reflect.setField(obj, "iterator", function() {
+				return [for( k in keys ) {
+					var e : Dynamic = {};
+					Reflect.setField(e, idName, k);
+					Reflect.setField(e, valName, Reflect.field(obj, k));
+					e;
+				}].iterator();
+			});
+			return obj;
+		} else if( subCols.length == 1 ) {
+			var vcol = subCols[0];
+			var vname = vcol.name;
+			if( vcol.type == TPolymorph ) {
+				// list of polymorphs of (possibly) identical type -> flatten to the variant value
+				var polySub = getSub(sub.name, vcol);
+				var out : Array<Dynamic> = [];
+				for( row in arr ) {
+					var cv = Reflect.field(row, vname);
+					if( cv == null ) { out.push(null); continue; }
+					var pval = getPolyVal(polySub, cv);
+					out.push(pval == null ? null : load(pval.col, pval.val, polySub.name));
+				}
+				return out;
+			}
+			return [for( row in arr ) load(vcol, Reflect.field(row, vname), sub.name)];
+		} else {
+			// full sub-objects
+			return arr;
+		}
+	}
+
+	function loadTree( col : Data.Column, raw : Dynamic, sheetName : String ) : Dynamic {
+		Browser.console.log("Loading tree");
 		var sub = getSub(sheetName, col);
 		var subCols = [for( c in sub.columns ) if( c.kind != Hidden ) c];
 		var arr : Array<Dynamic> = raw;

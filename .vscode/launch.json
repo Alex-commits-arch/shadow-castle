@@ -2,12 +2,29 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch NWjs",
             "type": "nwjs",
             "request": "launch",
-            "name": "Launch NWjs",
             "nwjsVersion": "any",
             "webRoot": "${workspaceFolder}/bin",
-            "preLaunchTask": "Build"
+            "runtimeExecutable": "${workspaceFolder}/bin/nwjs/nw.exe",
+            "preLaunchTask": "Build",
+            "runtimeArgs": [
+                "${workspaceFolder}/bin",
+                "--remote-debugging-port=9223",
+                "--user-data-dir=${workspaceFolder}/bin/user-data",
+                "--nwapp package.json"
+            ],
+            "timeout": -1,
+            "port": 9223
+        },
+        {
+            "name": "Attach NWjs",
+            "type": "nwjs",
+            "request": "attach",
+            "nwjsVersion": "any",
+            "port": 9223,
+            "timeout": 1000
         }
     ]
 }

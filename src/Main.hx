@@ -13,6 +13,10 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+import cdb.Parser;
+import haxe.Json;
+import js.Lib;
+import js.Browser;
 import haxe.io.Output;
 import cdb.Data;
 import cdb.Sheet;
@@ -110,7 +114,6 @@ class Main extends Model {
 		};
 		pages = new JqPages(this);
 		load(false);
-		js.Browser.console.log("helllo");
 		var t = new haxe.Timer(1000);
 		t.run = checkTime;
 	}
@@ -694,6 +697,7 @@ class Main extends Model {
 		var ndown = new MenuItem( { label : "Move Down" } );
 		var nins = new MenuItem( { label : "Insert" } );
 		var ndel = new MenuItem( { label : "Delete" } );
+		//** "Add Child" option for tree type 													<----------------------------------------------  **/
 		var nsep = new MenuItem( { label : "Separator", type : MenuItemType.checkbox } );
 		var nref = new MenuItem( { label : "Show References" } );
 		for( m in [nup, ndown, nins, ndel, nsep, nref] )
@@ -1679,6 +1683,23 @@ class Main extends Model {
 					});
 					if( openedList.get(key) )
 						todo.push(function() v.click());
+				case TTree(sheetName):
+					var key = sheet.getPath() + "@" + c.name + ":" + index;
+					// Browser.console.log('Tree here [$key]');
+					v.click(function(e) {
+						// var next = l.next("tr.tree");
+						// Browser.console.log('Tree here $sheetName');
+						var next = J("<tr>").addClass("tree").data("name", c.name);
+						J("<td>").appendTo(next);
+						var cell = J("<td>").attr("colspan", "" + colCount).appendTo(next);
+						var div = J("<div>").appendTo(cell);
+						var content = J("<table>").appendTo(div);
+
+						var sheet = base.getSheet(sheetName);
+						fillTree(content, val, sheet);
+						
+						next.insertAfter(l);
+					});
 				case TProperties:
 
 
@@ -1957,6 +1978,46 @@ class Main extends Model {
 		inTodo = true;
 		for( t in todo ) t();
 		inTodo = false;
+	}
+
+	function fillTree( content: JQuery, items: Array<TreeItem>, sheet: Sheet ) {
+		for( item in items ) {
+			var headerRow = J("<tr>").addClass("head").appendTo(content);
+			var valueRow = J("<tr>").appendTo(content);
+
+			var line = sheet.lines.filter(l -> Reflect.field(l, "name") == item.name)[0];
+			var itemType: TreeItemType = line;
+
+			J("<th>")
+				.text(item.name)
+				.attr("rowspan", 2)
+				.attr("colspan", 2)
+				.appendTo(headerRow);
+
+			var colCount = 0;
+
+			for (field in Reflect.fields(item.values)) {
+				colCount++;
+				J("<th>").text(field).appendTo(headerRow);
+				var typeString = Reflect.field(itemType.columns, field);
+				var ctype = Parser.getType(typeString);
+				var value = valueHtml(
+					{name: field, type: ctype, typeStr: typeString}, 
+					Reflect.field(item.values, field), 
+					null,
+					null
+				);
+				J("<td>").html(value).appendTo(valueRow);
+			}
+
+			var childrenRow = J("<tr>").append(J("<td>")).insertAfter(valueRow);
+			var childrenTable = J("<table>");
+			childrenRow.append(J("<td>").attr("colspan", colCount + 1).append(childrenTable));
+
+			fillTree(childrenTable, item.children, sheet);
+		}
+
+		// content.append('<tr><td><a href="#">Add item</a></td><t/r>');
 	}
 
 	@:keep function openFile( file : String ) {
