@@ -37,6 +37,24 @@
 		</div>
 	</div>
 
+	<div id="newtree" class="modal" style="display:none">
+		<div class="content">
+		<form id="tree_form" onsubmit="return false">
+			<h1>Sheet Props</h1>
+			<p>
+				<span>Sheet Name</span> <input type="text" class="value" id="sheet_name"/>
+			</p>
+			<p>
+				<label><input type="checkbox" class="value" id="sheet_level"/> Create Level</label>
+			</p>
+			<p class="buttons">
+				<input type="submit" value="Create" onclick="_.createSheet($('#sheet_name').val(),$('#sheet_level').prop('checked'))"/>
+				<input type="submit" value="Cancel" onclick="$(this).parents('.modal').hide()"/>
+			</p>
+		</form>
+		</div>
+	</div>
+
 	<div id="newcol" class="modal" style="display:none">
 		<div class="content">
 			<form id="col_form" onsubmit="return false">

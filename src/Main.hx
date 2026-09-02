@@ -1573,346 +1573,10 @@ class Main extends Model {
 			});
 			cols.append(col);
 
-			var ctype = "t_" + types[Type.enumIndex(c.type)];
 			for( index in 0...sheet.lines.length ) {
 				var obj = sheet.lines[index];
-				// var val : Dynamic = Reflect.field(obj,c.name);
-				// var v = J("<td>").addClass(ctype).addClass("c");
 				var l = lines[index];
 				createValueCell(cindex, index, sheet, l, c, obj).appendTo(l);
-				// v.appendTo(l);
-
-				// updateClasses(v, c, val);
-
-				// var html = valueHtml(c, val, sheet, obj);
-				// if( html == "&nbsp;" ) v.text(" ") else if( html.indexOf('<') < 0 && html.indexOf('&') < 0 ) v.text(html) else v.html(html);
-				// v.data("index", cindex);
-				// v.click(function(e) {
-				// 	if( inTodo ) {
-				// 		// nothing
-				// 	} else if( e.shiftKey && cursor.s == sheet ) {
-				// 		cursor.select = { x : cindex, y : index };
-				// 		updateCursor();
-				// 		e.stopImmediatePropagation();
-				// 	} else
-				// 		setCursor(sheet, cindex, index);
-				// 	e.stopPropagation();
-				// });
-
-				// function set(val2:Dynamic) {
-				// 	var old = val;
-				// 	val = val2;
-				// 	if( val == null )
-				// 		Reflect.deleteField(obj, c.name);
-				// 	else
-				// 		Reflect.setField(obj, c.name, val);
-				// 	html = valueHtml(c, val, sheet, obj);
-				// 	v.html(html);
-				// 	this.changed(sheet, c, index, old);
-				// }
-
-				// switch( c.type ) {
-				// case TImage:
-				// 	v.find("img").addClass("deletable").change(function(e) {
-				// 		if( Reflect.field(obj,c.name) != null ) {
-				// 			Reflect.deleteField(obj, c.name);
-				// 			refresh();
-				// 			save();
-				// 		}
-				// 	}).click(function(e) {
-				// 		JTHIS.addClass("selected");
-				// 		e.stopPropagation();
-				// 	});
-				// 	v.dblclick(function(_) editCell(c, v, sheet, index));
-				// 	v[0].addEventListener("drop", function(e : js.html.DragEvent ) {
-				// 		e.preventDefault();
-				// 		e.stopPropagation();
-				// 		if (e.dataTransfer.files.length > 0) {
-				// 			untyped v.dropFile = e.dataTransfer.files[0].path;
-				// 			editCell(c, v, sheet, index);
-				// 			untyped v.dropFile = null;
-				// 		}
-				// 	});
-				// case TList:
-				// 	var key = sheet.getPath() + "@" + c.name + ":" + index;
-				// 	v.click(function(e) {
-				// 		var next = l.next("tr.list");
-				// 		if( next.length > 0 ) {
-				// 			if( next.data("name") == c.name ) {
-				// 				next.change();
-				// 				return;
-				// 			}
-				// 			next.change();
-				// 		}
-				// 		next = J("<tr>").addClass("list").data("name", c.name);
-				// 		J("<td>").appendTo(next);
-				// 		var cell = J("<td>").attr("colspan", "" + colCount).appendTo(next);
-				// 		var div = J("<div>").appendTo(cell);
-				// 		if( !inTodo )
-				// 			div.hide();
-				// 		var content = J("<table>").appendTo(div);
-				// 		var psheet = sheet.getSub(c);
-				// 		if( val == null ) {
-				// 			val = [];
-				// 			Reflect.setField(obj, c.name, val);
-				// 		}
-				// 		psheet = new cdb.Sheet(base,{
-				// 			columns : psheet.columns, // SHARE
-				// 			props : psheet.props, // SHARE
-				// 			name : psheet.name, // same
-				// 			lines : val, // ref
-				// 			separators : [], // none
-				// 		},key, { sheet : sheet, column : cindex, line : index });
-				// 		fillTable(content, psheet);
-				// 		next.insertAfter(l);
-				// 		v.text("...");
-				// 		openedList.set(key,true);
-				// 		next.change(function(e) {
-				// 			if( c.opt && val.length == 0 ) {
-				// 				val = null;
-				// 				Reflect.deleteField(obj, c.name);
-				// 				save();
-				// 			}
-				// 			html = valueHtml(c, val, sheet, obj);
-				// 			v.html(html);
-				// 			div.slideUp(100, function() next.remove());
-				// 			openedList.remove(key);
-				// 			e.stopPropagation();
-				// 		});
-				// 		if( inTodo ) {
-				// 			// make sure we use the same instance
-				// 			if( cursor.s != null && cursor.s.getPath() == psheet.getPath() ) {
-				// 				cursor.s = psheet;
-				// 				checkCursor = false;
-				// 			}
-				// 		} else {
-				// 			div.slideDown(100);
-				// 			setCursor(psheet);
-				// 		}
-				// 		e.stopPropagation();
-				// 	});
-				// 	if( openedList.get(key) )
-				// 		todo.push(function() v.click());
-				// case TTree(sheetName):
-				// 	var key = sheet.getPath() + "@" + c.name + ":" + index;
-				// 	// Browser.console.log('Tree here [$key]');
-				// 	v.click(function(e) {
-				// 		// var next = l.next("tr.tree");
-				// 		// Browser.console.log('Tree here $sheetName');
-				// 		var next = J("<tr>").addClass("tree").data("name", c.name);
-				// 		J("<td>").appendTo(next);
-				// 		var cell = J("<td>").attr("colspan", "" + colCount).appendTo(next);
-				// 		var div = J("<div>").appendTo(cell);
-				// 		var content = J("<table>").appendTo(div);
-
-				// 		var sheet = base.getSheet(sheetName);
-				// 		fillTree(content, val, sheet);
-						
-				// 		next.insertAfter(l);
-				// 	});
-				// case TProperties:
-
-
-				// 	var key = sheet.getPath() + "@" + c.name + ":" + index;
-				// 	v.click(function(e) {
-				// 		var next = l.next("tr.list");
-				// 		if( next.length > 0 ) {
-				// 			if( next.data("name") == c.name ) {
-				// 				next.change();
-				// 				return;
-				// 			}
-				// 			next.change();
-				// 		}
-				// 		next = J("<tr>").addClass("list").data("name", c.name);
-				// 		J("<td>").appendTo(next);
-				// 		var cell = J("<td>").attr("colspan", "" + colCount).appendTo(next);
-				// 		var div = J("<div>").appendTo(cell);
-				// 		if( !inTodo )
-				// 			div.hide();
-				// 		var content = J("<table>").addClass("props").appendTo(div);
-				// 		var psheet = sheet.getSub(c);
-				// 		if( val == null ) {
-				// 			val = {};
-				// 			Reflect.setField(obj, c.name, val);
-				// 		}
-
-				// 		psheet = new cdb.Sheet(base,{
-				// 			columns : psheet.columns, // SHARE
-				// 			props : psheet.props, // SHARE
-				// 			name : psheet.name, // same
-				// 			lines : [for( f in Reflect.fields(val) ) null], // create as many fake lines as properties (for cursor navigation)
-				// 			separators : [], // none
-				// 		}, key, { sheet : sheet, column : cindex, line : index });
-				// 		@:privateAccess psheet.sheet.lines[0] = val; // ref
-				// 		fillProps(content, psheet, val);
-				// 		next.insertAfter(l);
-				// 		v.text("...");
-				// 		openedList.set(key,true);
-				// 		next.change(function(e) {
-				// 			if( c.opt && Reflect.fields(val).length == 0 ) {
-				// 				val = null;
-				// 				Reflect.deleteField(obj, c.name);
-				// 				save();
-				// 			}
-				// 			html = valueHtml(c, val, sheet, obj);
-				// 			v.html(html);
-				// 			div.slideUp(100, function() next.remove());
-				// 			openedList.remove(key);
-				// 			e.stopPropagation();
-				// 		});
-				// 		if( inTodo ) {
-				// 			// make sure we use the same instance
-				// 			if( cursor.s != null && cursor.s.getPath() == psheet.getPath() ) {
-				// 				cursor.s = psheet;
-				// 				checkCursor = false;
-				// 			}
-				// 		} else {
-				// 			div.slideDown(100);
-				// 			setCursor(psheet);
-				// 		}
-				// 		e.stopPropagation();
-				// 	});
-				// 	if( openedList.get(key) )
-				// 		todo.push(function() v.click());
-
-				// case TLayer(_):
-				// 	// nothing
-				// case TFile:
-				// 	v.find("input").addClass("deletable").change(function(e) {
-				// 		if( Reflect.field(obj,c.name) != null ) {
-				// 			Reflect.deleteField(obj, c.name);
-				// 			refresh();
-				// 			save();
-				// 		}
-				// 	});
-				// 	v.dblclick(function(_) {
-				// 		chooseFile(function(path) {
-				// 			set(path);
-				// 			save();
-				// 		});
-				// 	});
-				// 	v[0].addEventListener("drop", function( e : js.html.DragEvent ) {
-				// 		if ( e.dataTransfer.files.length > 0 ) {
-				// 			e.preventDefault();
-				// 			e.stopPropagation();
-				// 			var path = untyped e.dataTransfer.files[0].path;
-				// 			var relPath = makeRelativePath(path);
-				// 			set(relPath);
-				// 			save();
-				// 		}
-				// 	});
-				// case TTilePos:
-
-				// 	v.find("div").addClass("deletable").change(function(e) {
-				// 		if( Reflect.field(obj,c.name) != null ) {
-				// 			Reflect.deleteField(obj, c.name);
-				// 			refresh();
-				// 			save();
-				// 		}
-				// 	});
-
-				// 	v.dblclick(function(_) {
-				// 		var rv : cdb.Types.TilePos = val;
-				// 		var file = rv == null ? null : rv.file;
-				// 		var size = rv == null ? 16 : rv.size;
-				// 		var posX = rv == null ? 0 : rv.x;
-				// 		var posY = rv == null ? 0 : rv.y;
-				// 		var width = rv == null ? null : rv.width;
-				// 		var height = rv == null ? null : rv.height;
-				// 		if( width == null ) width = 1;
-				// 		if( height == null ) height = 1;
-				// 		if( file == null ) {
-				// 			var i = index - 1;
-				// 			while( i >= 0 ) {
-				// 				var o = sheet.lines[i--];
-				// 				var v2 = Reflect.field(o, c.name);
-				// 				if( v2 != null ) {
-				// 					file = v2.file;
-				// 					size = v2.size;
-				// 					break;
-				// 				}
-				// 			}
-				// 		}
-
-				// 		function setVal() {
-				// 			var v : Dynamic = { file : file, size : size, x : posX, y : posY };
-				// 			if( width != 1 ) v.width = width;
-				// 			if( height != 1 ) v.height = height;
-				// 			set(v);
-				// 		}
-
-				// 		if( file == null ) {
-				// 			chooseFile(function(path) {
-				// 				file = path;
-				// 				setVal();
-				// 				v.dblclick();
-				// 			});
-				// 			return;
-				// 		}
-				// 		var dialog = J(J(".tileSelect").parent().html()).prependTo(J("body"));
-
-				// 		var maxWidth = 1000000, maxHeight = 1000000;
-
-				// 		dialog.find(".tileView").css( { backgroundImage : 'url("file://${getAbsPath(file)}")' } ).mousemove(function(e) {
-				// 			var off = JTHIS.offset();
-				// 			posX = size == 1 ? Std.int((e.pageX - off.left)/width)*width : Std.int((e.pageX - off.left)/size);
-				// 			posY = size == 1 ? Std.int((e.pageY - off.top)/height)*height : Std.int((e.pageY - off.top) / size);
-				// 			if( (posX + width) * size > maxWidth )
-				// 				posX = Std.int(maxWidth / size) - width;
-				// 			if( (posY + height) * size > maxHeight )
-				// 				posY = Std.int(maxHeight / size) - height;
-				// 			if( posX < 0 ) posX = 0;
-				// 			if( posY < 0 ) posY = 0;
-				// 			J(".tileCursor").not(".current").css({
-				// 				marginLeft : (size * posX - 1) + "px",
-				// 				marginTop : (size * posY - 1) + "px",
-				// 			});
-				// 		}).click(function(_) {
-				// 			setVal();
-				// 			dialog.remove();
-				// 			save();
-				// 		});
-				// 		dialog.find("[name=size]").val("" + size).change(function(_) {
-				// 			size = Std.parseInt(JTHIS.val());
-				// 			J(".tileCursor").css( { width:(size*width)+"px", height:(size*height)+"px" } );
-				// 			J(".tileCursor.current").css( { marginLeft : (size * posX - 2) + "px", marginTop : (size * posY - 2) + "px" } );
-				// 		}).change();
-				// 		dialog.find("[name=width]").val("" + width).change(function(_) {
-				// 			width = Std.parseInt(JTHIS.val());
-				// 			J(".tileCursor").css( { width:(size*width)+"px", height:(size*height)+"px" } );
-				// 		}).change();
-				// 		dialog.find("[name=height]").val("" + height).change(function(_) {
-				// 			height = Std.parseInt(JTHIS.val());
-				// 			J(".tileCursor").css( { width:(size*width)+"px", height:(size*height)+"px" } );
-				// 		}).change();
-				// 		dialog.find("[name=cancel]").click(function(_) dialog.remove());
-				// 		dialog.find("[name=file]").click(function(_) {
-				// 			chooseFile(function(f) {
-				// 				file = f;
-				// 				dialog.remove();
-				// 				setVal();
-				// 				save();
-				// 				v.dblclick();
-				// 			});
-				// 		});
-				// 		dialog.keydown(function(e) e.stopPropagation()).keypress(function(e) e.stopPropagation());
-				// 		dialog.show();
-
-				// 		var i = js.Browser.document.createImageElement();
-				// 		i.onload = function(_) {
-				// 			maxWidth = i.width;
-				// 			maxHeight = i.height;
-				// 			dialog.find(".tileView").height(i.height).width(i.width);
-				// 			dialog.find(".tilePath").text(file+" (" + i.width + "x" + i.height + ")");
-				// 		};
-				// 		i.src = "file://" + getAbsPath(file);
-
-				// 	});
-
-
-				// default:
-				// 	v.dblclick(function(e) editCell(c, v, sheet, index));
-				// }
 			}
 		}
 
@@ -2355,12 +2019,12 @@ class Main extends Model {
 
 			var colCount = 0;
 
-			for (field in Reflect.fields(item.values)) {
+			for (columnName in Reflect.fields(itemType.columns)) {
 				colCount++;
-				J("<th>").text(field).appendTo(headerRow);
-				var typeString = Reflect.field(itemType.columns, field);
+				J("<th>").text(columnName).appendTo(headerRow);
+				var typeString = Reflect.field(itemType.columns, columnName);
 				var ctype = Parser.getType(typeString);
-				var column: Column = {name: field, type: ctype, typeStr: typeString};
+				var column: Column = {name: columnName, type: ctype, typeStr: typeString};
 				createValueCell(columnIndex, rowIndex, sheet, valueRow, column, item.values).appendTo(valueRow);
 			}
 
@@ -2373,7 +2037,27 @@ class Main extends Model {
 			}
 		}
 
-		content.append('<tr><td><a href="#">Add item</a></td><t/r>');
+		var itemOptions = J("<select>");
+		itemOptions.append('<option value="" disabled selected hidden>Add Item...</option>');
+		for (name in sheet.lines.map(l -> Reflect.field(l, "name"))) {
+			itemOptions.append(J('<option value="$name">').text(name));
+		}
+		J("<tr>").append(J("<td>").append(itemOptions)).appendTo(content);
+
+		
+		itemOptions.change(function (e) {
+			var selected = itemOptions.val();
+
+			var line: TreeItemType = sheet.lines.filter(l -> Reflect.field(l, "name") == selected)[0];
+				
+			items.push({
+				name: selected,
+				values: {},
+				children: []
+			});
+
+			refresh();
+		});
 	}
 
 	@:keep function openFile( file : String ) {
