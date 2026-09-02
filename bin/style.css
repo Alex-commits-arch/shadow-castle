@@ -310,6 +310,22 @@ div#menu ul.sheets li.active {
 .castle tr.filtered, .dialog-floating tr.filtered {
 	display : none;
 }
+
+.castle tr.tree td {
+	padding: 0;
+}
+.castle tr.tree td.c {
+	padding: 8px 4px;
+}
+.castle tr.tree a {
+	border: 1px solid black;
+    display: flex;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    justify-content: center;
+    padding: 3px 0;
+}
+
 .castle tr.list, .dialog-floating tr.list {
 	background-color : #CCC;
 	border-bottom : 0px;
