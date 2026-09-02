@@ -693,6 +693,30 @@ class Main extends Model {
 		}
 	}
 
+	function popupTree(item: TreeItem, items: Array<TreeItem>) {
+		var menu = new Menu();
+		var mchild = new MenuItem( { label : "Add Child" } );
+		var mdelete = new MenuItem( { label : "Delete" } );
+
+		menu.append(mchild);
+		menu.append(mdelete);
+
+		mchild.click = function() {
+			item.children.push(null);
+			refresh();
+		};
+
+		mdelete.click = function() {
+			var index = items.indexOf(item);
+			if (index != -1)
+				items.splice(index, 1);
+			refresh();
+			save();
+		}
+
+		menu.popup(mousePos.x, mousePos.y);
+	}
+
 	function popupLine( sheet : Sheet, index : Int ) {
 		var n = new Menu();
 		var nup = new MenuItem( { label : "Move Up" } );
@@ -1225,6 +1249,7 @@ class Main extends Model {
 			} else {
 				val = !val;
 				Reflect.setField(obj, c.name, val);
+				v.data("value", val);
 			}
 			updateClasses(v, c, val);
 			v.html(getValue());
@@ -1781,21 +1806,33 @@ class Main extends Model {
 				todo.push(function() valueCell.click());
 		case TTree(sheetName):
 			var key = sheet.getPath() + "@" + column.name + ":" + rowIndex;
-			// Browser.console.log('Tree here [$key]');
 			valueCell.click(function(e) {
-				// var next = l.next("tr.tree");
-				// Browser.console.log('Tree here $sheetName');
-				var next = J("<tr>").addClass("tree").data("name", column.name);
-				J("<td>").appendTo(next);
-				var cell = J("<td>").attr("colspan", "" + colCount).appendTo(next);
+				var existingTree = line.next("tr.tree");
+				if(existingTree.length > 0) {
+					var existingKey = existingTree.data("key");
+					openedList.set(existingKey, false);
+					existingTree.remove();
+					if (existingKey == key) {
+						return;
+					}
+				}
+					
+				var tree = J("<tr>").addClass("tree").data("name", column.name).data("key", key);
+				J("<td>").appendTo(tree);
+				var cell = J("<td>").attr("colspan", "" + colCount).appendTo(tree);
 				var div = J("<div>").appendTo(cell);
 				var content = J("<table>").appendTo(div);
 
 				var sheet = base.getSheet(sheetName);
 				fillTree(content, val, sheet, columnIndex, rowIndex);
+
+				openedList.set(key, true);
 				
-				next.insertAfter(line);
+				tree.insertAfter(line);
 			});
+
+			if (openedList.get(key)) 
+				todo.push(() -> valueCell.click());
 		case TProperties:
 
 
@@ -2005,17 +2042,25 @@ class Main extends Model {
 
 	function fillTree( content: JQuery, items: Array<TreeItem>, sheet: Sheet, columnIndex: Int, rowIndex: Int ) {
 		for( item in items ) {
+			if (item == null) continue;
+
 			var headerRow = J("<tr>").addClass("head").appendTo(content);
 			var valueRow = J("<tr>").appendTo(content);
 
 			var line = sheet.lines.filter(l -> Reflect.field(l, "name") == item.name)[0];
 			var itemType: TreeItemType = line;
 
-			J("<th>")
+			var header = J("<th>")
 				.text(item.name)
 				.attr("rowspan", 2)
 				// .attr("colspan", 2)
 				.appendTo(headerRow);
+
+			header.mousedown(function (e) {
+				Browser.console.log("Press");
+				if (e.which == 3)
+					popupTree(item, items);
+			});
 
 			var colCount = 0;
 
@@ -2048,8 +2093,6 @@ class Main extends Model {
 		itemOptions.change(function (e) {
 			var selected = itemOptions.val();
 
-			var line: TreeItemType = sheet.lines.filter(l -> Reflect.field(l, "name") == selected)[0];
-				
 			items.push({
 				name: selected,
 				values: {},
