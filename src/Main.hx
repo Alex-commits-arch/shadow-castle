@@ -2072,6 +2072,8 @@ class Main extends Model {
 				var typeString = Reflect.field(itemType.columns, columnName);
 				var ctype = Parser.getType(typeString);
 				var column: Column = {name: columnName, type: ctype, typeStr: typeString};
+				var defaultValue = base.getDefault(column, true);
+				Reflect.setField(item.values, columnName, defaultValue);
 				createValueCell(columnIndex, rowIndex, sheet, valueRow, column, item.values).appendTo(valueRow);
 			}
 
