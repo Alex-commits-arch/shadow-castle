@@ -1072,6 +1072,7 @@ class Main extends Model {
 				case TDynamic:
 					i.val(haxe.Json.stringify(val));
 				default:
+					Browser.console.log("Value: ", val);
 					i.val(""+val);
 				}
 			i.change(function(e) e.stopPropagation());
@@ -1132,6 +1133,7 @@ class Main extends Model {
 
 						val = val2;
 						Reflect.setField(obj, c.name, val);
+						v.data("value", val);
 						changed();
 						html = getValue();
 					}
